@@ -25,6 +25,10 @@
 #include <time.h>
 #include "Critter.h"
 
+// To do: 
+// Make an object pool
+// Make a texture Manager
+// Change the origin it is currently at the top left and makes collision look weird
 int main(int argc, char* argv[])
 {
     // Initialization
@@ -179,6 +183,8 @@ int main(int argc, char* argv[])
                     Vector2 pos = destroyer.GetPosition();
                     pos = Vector2Add(pos, Vector2Scale(normal, -50));
                     // its pretty ineficient to keep reloading textures. ...if only there was something else we could do
+                    // Make a texture manager
+                    // Look into the texture loading to improve performance
                     critters[i].Init(pos, Vector2Scale(normal, -MAX_VELOCITY), 12, "res/10.png");
                     break;
                 }

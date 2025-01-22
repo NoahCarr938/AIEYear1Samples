@@ -17,9 +17,6 @@ public:
 
 private:
 	int recordCount;
-    
-
-
 
 public:
 	DataFile();
