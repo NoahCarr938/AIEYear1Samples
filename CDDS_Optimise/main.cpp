@@ -26,6 +26,7 @@
 #include "Critter.h"
 
 // To do: 
+// Read through all of the code and understand what is happening
 // Make an object pool
 // Make a texture Manager
 // Change the origin it is currently at the top left and makes collision look weird
