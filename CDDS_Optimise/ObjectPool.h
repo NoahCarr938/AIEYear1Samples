@@ -3,145 +3,64 @@
 #include "Iterator.h"
 #include "initializer_list"
 #include "Critter.h"
+#include "List.h"
 
 template<typename T>
 class ObjectPool
 {
+private:
+	List<T>* m_objectsInPool;
+	List<T>* m_objectsOutOfPool;
 public:
 	ObjectPool<T>();
-	ObjectPool<T>(std::initializer_list<T> list);
 	~ObjectPool();
-	void pushFront(const T& value);
-	void pushBack(const T& value);
-	T popFront();
-	T popBack();
-	bool insert(const T& value, int index);
-	int remove(const T& value);
-	bool allocate();
-	bool deallocate();
-	bool isAlive();
-	T objectPoolFirst() const;
-	T objectPoolLast() const;
-	Iterator<T> objectPoolBegin() const;
-	Iterator<T> objectPoolEnd() const;
-	void destroy();
-	void spawn();
-	int getLength() const;
-
-private:
-	bool m_active = false;
-	bool m_inactive = true;
-	int m_length;
-	int m_countActive;
-	int m_countInactive;
-	float m_lifetime;
-	Node<T*> m_head;
-	Node<T*> m_tail;
+	// Return an object from the pool
+	T allocate();
+	// Return an object back into the pool
+	void deallocate(T* object);
+	void destroyObjectPool();
 };
 
 template<typename T>
-inline ObjectPool<T>::ObjectPool()
+inline ObjectPool<T>::ObjectPool() : m_objectsInPool()
 {
-}
 
-template<typename T>
-inline ObjectPool<T>::ObjectPool(std::initializer_list<T> list)
-{
 }
 
 template<typename T>
 inline ObjectPool<T>::~ObjectPool()
 {
+	// destroy the object pool here
+
+	delete m_objectsInPool;
+	m_objectsInPool = nullptr;
 }
 
 template<typename T>
-inline void ObjectPool<T>::pushFront(const T& value)
+inline T ObjectPool<T>::allocate()
 {
+	// If the pool is empty, return new T
+	if (m_objectsInPool.m_length == 0)
+		return new T;
+	// Getting the last object in the list
+	auto obj = m_objectsInPool.m_tail;
+	m_objectsInPool.popBack();
+	return obj;
 }
 
 template<typename T>
-inline void ObjectPool<T>::pushBack(const T& value)
+inline void ObjectPool<T>::deallocate(T* object)
 {
+
 }
 
 template<typename T>
-inline T ObjectPool<T>::popFront()
+inline void ObjectPool<T>::destroyObjectPool()
 {
-	return T();
+	for (int i = 0; i < ObjectPool.m_length; i++)
+	{
+		m_objectsOutOfPool.popBack();
+	}
 }
 
-template<typename T>
-inline T ObjectPool<T>::popBack()
-{
-	return T();
-}
 
-template<typename T>
-inline bool ObjectPool<T>::insert(const T& value, int index)
-{
-	return false;
-}
-
-template<typename T>
-inline int ObjectPool<T>::remove(const T& value)
-{
-	return 0;
-}
-
-template<typename T>
-inline bool ObjectPool<T>::allocate()
-{
-	return false;
-}
-
-template<typename T>
-inline bool ObjectPool<T>::deallocate()
-{
-	return false;
-}
-
-template<typename T>
-inline bool ObjectPool<T>::isAlive()
-{
-	return false;
-}
-
-template<typename T>
-inline T ObjectPool<T>::objectPoolFirst() const
-{
-	return T();
-}
-
-template<typename T>
-inline T ObjectPool<T>::objectPoolLast() const
-{
-	return T();
-}
-
-template<typename T>
-inline Iterator<T> ObjectPool<T>::objectPoolBegin() const
-{
-	return Iterator<T>();
-}
-
-template<typename T>
-inline Iterator<T> ObjectPool<T>::objectPoolEnd() const
-{
-	return Iterator<T>();
-}
-
-template<typename T>
-inline void ObjectPool<T>::destroy()
-{
-}
-
-template<typename T>
-inline void ObjectPool<T>::spawn()
-{
-}
-
-template<typename T>
-inline int ObjectPool<T>::getLength() const
-{
-	return m_length;
-}

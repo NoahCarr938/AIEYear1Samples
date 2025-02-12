@@ -24,6 +24,7 @@
 #include <random>
 #include <time.h>
 #include "Critter.h"
+#include "ObjectPool.h"
 
 // To do: 
 // Read through all of the code and understand what is happening
@@ -136,6 +137,8 @@ int main(int argc, char* argv[])
             {
                 critters[i].Destroy();
                 // this would be the perfect time to put the critter into an object pool
+                ObjectPool<const char*> critterPool{};
+                
             }
         }
                 
