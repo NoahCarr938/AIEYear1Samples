@@ -53,6 +53,10 @@ int main(int argc, char* argv[])
     const int CRITTER_COUNT = 50;
     const int MAX_VELOCITY = 80;
 
+    // Creating the object pool for the critters
+    ObjectPool<Critter> pool(10);
+
+
     for (int i = 0; i < CRITTER_COUNT; i++)
     {
         // create a random direction vector for the velocity
@@ -137,8 +141,17 @@ int main(int argc, char* argv[])
             {
                 critters[i].Destroy();
                 // this would be the perfect time to put the critter into an object pool
-                ObjectPool<const char*> critterPool{};
-                
+                Critter* obj1 = pool.allocate();
+                if (obj1)
+                {
+                    pool.deallocate(obj1);
+                }
+
+                Critter* obj2 = pool.allocate();
+                if (obj2)
+                {
+                    pool.deallocate(obj2);
+                }
             }
         }
                 
