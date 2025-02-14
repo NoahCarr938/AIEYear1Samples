@@ -54,7 +54,8 @@ int main(int argc, char* argv[])
     const int MAX_VELOCITY = 80;
 
     // Creating the object pool for the critters
-    ObjectPool<Critter> pool(10);
+    //ObjectPool<Critter> pool(100);
+    ObjectPool<Critter> pool(100);
 
 
     for (int i = 0; i < CRITTER_COUNT; i++)
@@ -141,17 +142,8 @@ int main(int argc, char* argv[])
             {
                 critters[i].Destroy();
                 // this would be the perfect time to put the critter into an object pool
-                Critter* obj1 = pool.allocate();
-                if (obj1)
-                {
-                    pool.deallocate(obj1);
-                }
+                //Critter* obj1 = pool.allocate();
 
-                Critter* obj2 = pool.allocate();
-                if (obj2)
-                {
-                    pool.deallocate(obj2);
-                }
             }
         }
                 
