@@ -49,13 +49,15 @@ int main(int argc, char* argv[])
 
     Critter critters[1000]; 
 
+    ObjectPool<Critter> ObjectPool;
+
     // create some critters
     const int CRITTER_COUNT = 50;
     const int MAX_VELOCITY = 80;
 
     // Creating the object pool for the critters
     //ObjectPool<Critter> pool(100);
-    ObjectPool<Critter> pool(100);
+    
 
 
     for (int i = 0; i < CRITTER_COUNT; i++)
@@ -70,6 +72,8 @@ int main(int argc, char* argv[])
             { (float)(5+rand() % (screenWidth-10)), (float)(5+(rand() % screenHeight-10)) },
             velocity,
             12, "res/10.png");
+
+        ObjectPool.poolAdd(critters[i], i);
     }
 
 
@@ -140,10 +144,11 @@ int main(int argc, char* argv[])
             float dist = Vector2Distance(critters[i].GetPosition(), destroyer.GetPosition());
             if (dist < critters[i].GetRadius() + destroyer.GetRadius())
             {
-                critters[i].Destroy();
                 // this would be the perfect time to put the critter into an object pool
-                //Critter* obj1 = pool.allocate();
-
+                ObjectPool.deactivateObject(critters[i]);
+                critters[i].makeDead();
+                Vector2 InactivePosition = { 100, 100 };
+                critters[i].SetPosition(InactivePosition);
             }
         }
                 
@@ -182,24 +187,29 @@ int main(int argc, char* argv[])
         {
             timer = 1;
 
-            // find any dead critters and spit them out (respawn)
-            for (int i = 0; i < CRITTER_COUNT; i++)
+            if (ObjectPool.m_objectsInPool.getLength() >= 1)
             {
-                if (critters[i].IsDead())
+                // find any dead critters and spit them out (respawn)
+                for (int i = 0; i < CRITTER_COUNT; i++)
                 {
-                    Vector2 normal = Vector2Normalize(destroyer.GetVelocity());
+                    if (critters[i].IsDead())
+                    {
+                        Vector2 normal = Vector2Normalize(destroyer.GetVelocity());
 
-                    // get a position behind the destroyer, and far enough away that the critter won't bump into it again
-                    Vector2 pos = destroyer.GetPosition();
-                    pos = Vector2Add(pos, Vector2Scale(normal, -50));
-                    // its pretty ineficient to keep reloading textures. ...if only there was something else we could do
-                    // Make a texture manager
-                    // Look into the texture loading to improve performance
-                    critters[i].Init(pos, Vector2Scale(normal, -MAX_VELOCITY), 12, "res/10.png");
-                    break;
+                        // get a position behind the destroyer, and far enough away that the critter won't bump into it again
+                        Vector2 pos = destroyer.GetPosition();
+                        pos = Vector2Add(pos, Vector2Scale(normal, -50));
+                        ObjectPool.m_objectsInPool.first()->makeAlive();
+                        ObjectPool.m_objectsInPool.first()->SetPosition(pos);
+                        ObjectPool.m_objectsInPool.first()->SetVelocity(Vector2Scale(normal, -MAX_VELOCITY));
+                        ObjectPool.activateObjectIndex(i);
+                        critters[i].Init(pos, Vector2Scale(normal, -MAX_VELOCITY), 12, "res/10.png");
+                        break;
+                    }
                 }
+                nextSpawnPos = destroyer.GetPosition();
             }
-            nextSpawnPos = destroyer.GetPosition();
+           
         }
 
         // Draw
