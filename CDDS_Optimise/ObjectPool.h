@@ -8,7 +8,8 @@
 template <typename T>
 class ObjectPool {
 private:
-   
+    /*List<T*> m_objectsInPool;
+    List<T*> m_objectsOutOfPool;*/
 
 public:
     ObjectPool<T>();
@@ -17,8 +18,16 @@ public:
     void activateObjectIndex(int index);
     void deactivateObject(T& value);
     void poolAdd(T& value, int index);
+
+    // Lists need to be private
     List<T*> m_objectsInPool;
     List<T*> m_objectsOutOfPool;
+
+    
+    // Getters for these and store them as lists
+    int getActiveCount() { return m_objectsInPool; }
+    int getInactiveCount() { return m_objectsInPool; }
+    int getTotalCount() { return m_objectsInPool + m_objectsOutOfPool; }
 };
 
 template<typename T>
