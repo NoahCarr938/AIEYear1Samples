@@ -48,6 +48,7 @@ inline ObjectPool<T>::ObjectPool(int size, CreateItemSignature createItemFunctio
         {
             // Add item to my inactiveList
             T item = createItemFunction();
+            m_objectsInPool.pushBack(&item);
             //m_objectsInPool.insert(T, 0);
            // m_objectsInPool.pushFront(Critter);
         }
