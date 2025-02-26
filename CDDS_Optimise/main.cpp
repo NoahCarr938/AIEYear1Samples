@@ -154,7 +154,6 @@ int main(int argc, char* argv[])
             if (dist < critters[i].GetRadius() + destroyer.GetRadius())
             {
                 // this would be the perfect time to put the critter into an object pool
-                std::cout << "Critter removed from game" << std::endl;
                 ObjectPool.deactivateObject(critters[i]);
                 critters[i].makeDead();
                 Vector2 InactivePosition = { 100, 100 };
@@ -207,15 +206,11 @@ int main(int argc, char* argv[])
                         Vector2 normal = Vector2Normalize(destroyer.GetVelocity());
 
                         // get a position behind the destroyer, and far enough away that the critter won't bump into it again
-                        std::cout << "Critter added to game" << std::endl;
                         Vector2 pos = destroyer.GetPosition();
                         pos = Vector2Add(pos, Vector2Scale(normal, -50));
                         ObjectPool.m_objectsInPool.first()->makeAlive();
                         ObjectPool.m_objectsInPool.first()->SetPosition(pos);
                         ObjectPool.m_objectsInPool.first()->SetVelocity(Vector2Scale(normal, -MAX_VELOCITY));
-                        /*ObjectPool.m_objectsInPool.last()->makeAlive();
-                        ObjectPool.m_objectsInPool.last()->SetPosition(pos);
-                        ObjectPool.m_objectsInPool.last()->SetVelocity(Vector2Scale(normal, -MAX_VELOCITY));*/
                         ObjectPool.activateObjectIndex(i);
                         critters[i].Init(pos, Vector2Scale(normal, -MAX_VELOCITY), 12, "res/10.png");
                         break;
