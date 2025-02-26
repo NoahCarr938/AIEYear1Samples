@@ -19,6 +19,7 @@
 *
 ********************************************************************************************/
 
+#include <iostream>
 #include "raylib.h"
 #include "raymath.h"
 #include <random>
@@ -32,6 +33,14 @@
 // Make an object pool
 // Make a texture Manager or a Resource Manager
 // Change the origin it is currently at the top left and makes collision look weird
+
+class Critter;
+
+Critter makeCritter()
+{
+    return Critter();
+}
+
 int main(int argc, char* argv[])
 {
     // Initialization
@@ -46,19 +55,19 @@ int main(int argc, char* argv[])
 
     srand(time(NULL));
 
+    
+    
 
     Critter critters[1000]; 
 
-    ObjectPool<Critter> ObjectPool;
+    //ObjectPool<Critter> ObjectPool(100);
+    //ObjectPool<Critter> ObjectPool = ObjectPool<Critter>(100, makeCritter);
+    // Creating the object pool for the critters
+    ObjectPool<Critter> ObjectPool(100, makeCritter);
 
     // create some critters
     const int CRITTER_COUNT = 50;
     const int MAX_VELOCITY = 80;
-
-    // Creating the object pool for the critters
-    //ObjectPool<Critter> pool(100);
-    
-
 
     for (int i = 0; i < CRITTER_COUNT; i++)
     {
@@ -145,6 +154,7 @@ int main(int argc, char* argv[])
             if (dist < critters[i].GetRadius() + destroyer.GetRadius())
             {
                 // this would be the perfect time to put the critter into an object pool
+                std::cout << "Critter removed from game" << std::endl;
                 ObjectPool.deactivateObject(critters[i]);
                 critters[i].makeDead();
                 Vector2 InactivePosition = { 100, 100 };
@@ -197,11 +207,15 @@ int main(int argc, char* argv[])
                         Vector2 normal = Vector2Normalize(destroyer.GetVelocity());
 
                         // get a position behind the destroyer, and far enough away that the critter won't bump into it again
+                        std::cout << "Critter added to game" << std::endl;
                         Vector2 pos = destroyer.GetPosition();
                         pos = Vector2Add(pos, Vector2Scale(normal, -50));
                         ObjectPool.m_objectsInPool.first()->makeAlive();
                         ObjectPool.m_objectsInPool.first()->SetPosition(pos);
                         ObjectPool.m_objectsInPool.first()->SetVelocity(Vector2Scale(normal, -MAX_VELOCITY));
+                        /*ObjectPool.m_objectsInPool.last()->makeAlive();
+                        ObjectPool.m_objectsInPool.last()->SetPosition(pos);
+                        ObjectPool.m_objectsInPool.last()->SetVelocity(Vector2Scale(normal, -MAX_VELOCITY));*/
                         ObjectPool.activateObjectIndex(i);
                         critters[i].Init(pos, Vector2Scale(normal, -MAX_VELOCITY), 12, "res/10.png");
                         break;
@@ -228,7 +242,31 @@ int main(int argc, char* argv[])
         // destroyer, it's because the origin is at the top-left. ...you could fix that!)
         destroyer.Draw();
 
+        // lowest and highest fps 
+       /* int lowestFPS = 60;
+        int highestFPS = 60;
+        int currentFPS = GetFPS();
+        if (currentFPS < lowestFPS)
+        {
+            lowestFPS = currentFPS;
+        }
+        if (currentFPS > highestFPS)
+        {
+            highestFPS = currentFPS;
+        }*/
+
         DrawFPS(10, 10);
+       /* DrawText(TextFormat("Active Critter Count: %i", ObjectPool.getActiveCount()), 200, 10, 20, DARKGREEN);
+        DrawText(TextFormat("Inactive Critter Count: %i", ObjectPool.getInactiveCount()), 200, 30, 20, DARKGREEN);
+        DrawText(TextFormat("Total Critter Count: %i", ObjectPool.getTotalCount()), 200, 50, 20, DARKGREEN);*/
+
+        // Is currently wrong with both of the list counts
+        /*DrawText(TextFormat("Objects In Pool: %i", ObjectPool.m_objectsInPool.getLength()), 600, 10, 20, DARKGREEN);
+        DrawText(TextFormat("Objects In Scene: %i", ObjectPool.m_objectsOutOfPool.getLength()), 300, 10, 20, DARKGREEN);*/
+        
+        //DrawText(TextFormat("Current FPS: %i", currentFPS), 600, 10, 20, DARKGREEN);
+       /* DrawText(TextFormat("Lowest FPS: %i", lowestFPS), 200, 10, 20, DARKGREEN);
+        DrawText(TextFormat("Highest FPS: %i", highestFPS), 400, 10, 20, DARKGREEN);*/
         //DrawText("Congrats! You created your first window!", 190, 200, 20, LIGHTGRAY);
 
         EndDrawing();

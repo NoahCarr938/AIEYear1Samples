@@ -8,16 +8,18 @@
 template <typename T>
 class ObjectPool {
 private:
-    /*List<T*> m_objectsInPool;
+   /* List<T*> m_objectsInPool;
     List<T*> m_objectsOutOfPool;*/
 
 public:
-    ObjectPool<T>();
-    ~ObjectPool<T>();
+    typedef T(*CreateItemSignature)();
+    ObjectPool<T>(int size, CreateItemSignature createItemFunction);
+    ~ObjectPool();
     void activateObject(T &value);
     void activateObjectIndex(int index);
     void deactivateObject(T& value);
     void poolAdd(T& value, int index);
+    
 
     // Lists need to be private
     List<T*> m_objectsInPool;
@@ -25,14 +27,31 @@ public:
 
     
     // Getters for these and store them as lists
-    int getActiveCount() { return m_objectsInPool; }
-    int getInactiveCount() { return m_objectsInPool; }
-    int getTotalCount() { return m_objectsInPool + m_objectsOutOfPool; }
+    int getActiveCount() { return m_objectsInPool.getLength(); }
+    int getInactiveCount() { return m_objectsInPool.getLength(); }
+    int getTotalCount() { return m_objectsInPool.getLength() + m_objectsOutOfPool.getLength(); }
 };
 
 template<typename T>
-inline ObjectPool<T>::ObjectPool()
+inline ObjectPool<T>::ObjectPool(int size, CreateItemSignature createItemFunction)
 {
+    if (size <= 0)
+    {
+        // Initialize lists with nothing in them
+        List<T*> m_objectsInPool{};
+        List<T*> m_objectsOutOfPool{};
+    }
+    // Object pool should take a default size and activate everything in here. Object pool should take a function pointer.
+    else
+    {
+        for (int i = 0; i < size; i++)
+        {
+            // Add item to my inactiveList
+            T item = createItemFunction();
+            //m_objectsInPool.insert(T, 0);
+           // m_objectsInPool.pushFront(Critter);
+        }
+    }
 }
 
 template<typename T>
