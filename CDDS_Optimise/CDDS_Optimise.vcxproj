@@ -176,6 +176,7 @@
     <ClInclude Include="List.h" />
     <ClInclude Include="Node.h" />
     <ClInclude Include="ObjectPool.h" />
+    <ClInclude Include="Singleton.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

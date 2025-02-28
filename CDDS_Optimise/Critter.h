@@ -44,7 +44,7 @@ public:
 	void makeAlive() { m_isLoaded = false; }
 	void makeDead() { m_isLoaded = true; }
 
-	bool IsDead() { return m_isLoaded == true; }
+	bool IsDead() { return m_isLoaded == false; }
 
 	//void makeAlive() { m_isLoaded = true; }
 	//void makeDead() { m_isLoaded = false; }

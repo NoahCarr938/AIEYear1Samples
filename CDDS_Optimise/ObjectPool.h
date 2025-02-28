@@ -8,8 +8,6 @@
 template <typename T>
 class ObjectPool {
 private:
-   /* List<T*> m_objectsInPool;
-    List<T*> m_objectsOutOfPool;*/
 
 public:
     typedef T(*CreateItemSignature)();
@@ -21,7 +19,6 @@ public:
     void poolAdd(T& value, int index);
     
 
-    // Lists need to be private
     List<T*> m_objectsInPool;
     List<T*> m_objectsOutOfPool;
 
@@ -49,8 +46,6 @@ inline ObjectPool<T>::ObjectPool(int size, CreateItemSignature createItemFunctio
             // Add item to my inactiveList
             T item = createItemFunction();
             m_objectsInPool.pushBack(&item);
-            //m_objectsInPool.insert(T, 0);
-           // m_objectsInPool.pushFront(Critter);
         }
     }
 }

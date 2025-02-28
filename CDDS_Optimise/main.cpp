@@ -154,6 +154,7 @@ int main(int argc, char* argv[])
             if (dist < critters[i].GetRadius() + destroyer.GetRadius())
             {
                 // this would be the perfect time to put the critter into an object pool
+                // deactivating the critters that die and adding them to the object pool
                 ObjectPool.deactivateObject(critters[i]);
                 critters[i].makeDead();
                 Vector2 InactivePosition = { 100, 100 };
@@ -196,7 +197,7 @@ int main(int argc, char* argv[])
         {
             timer = 1;
 
-            if (ObjectPool.m_objectsInPool.getLength() >= 1)
+            if (ObjectPool.getInactiveCount() >= 1)
             {
                 // find any dead critters and spit them out (respawn)
                 for (int i = 0; i < CRITTER_COUNT; i++)
@@ -212,7 +213,6 @@ int main(int argc, char* argv[])
                         ObjectPool.m_objectsInPool.first()->SetPosition(pos);
                         ObjectPool.m_objectsInPool.first()->SetVelocity(Vector2Scale(normal, -MAX_VELOCITY));
                         ObjectPool.activateObjectIndex(i);
-                        critters[i].Init(pos, Vector2Scale(normal, -MAX_VELOCITY), 12, "res/10.png");
                         break;
                     }
                 }
@@ -237,31 +237,7 @@ int main(int argc, char* argv[])
         // destroyer, it's because the origin is at the top-left. ...you could fix that!)
         destroyer.Draw();
 
-        // lowest and highest fps 
-       /* int lowestFPS = 60;
-        int highestFPS = 60;
-        int currentFPS = GetFPS();
-        if (currentFPS < lowestFPS)
-        {
-            lowestFPS = currentFPS;
-        }
-        if (currentFPS > highestFPS)
-        {
-            highestFPS = currentFPS;
-        }*/
-
         DrawFPS(10, 10);
-       /* DrawText(TextFormat("Active Critter Count: %i", ObjectPool.getActiveCount()), 200, 10, 20, DARKGREEN);
-        DrawText(TextFormat("Inactive Critter Count: %i", ObjectPool.getInactiveCount()), 200, 30, 20, DARKGREEN);
-        DrawText(TextFormat("Total Critter Count: %i", ObjectPool.getTotalCount()), 200, 50, 20, DARKGREEN);*/
-
-        // Is currently wrong with both of the list counts
-        /*DrawText(TextFormat("Objects In Pool: %i", ObjectPool.m_objectsInPool.getLength()), 600, 10, 20, DARKGREEN);
-        DrawText(TextFormat("Objects In Scene: %i", ObjectPool.m_objectsOutOfPool.getLength()), 300, 10, 20, DARKGREEN);*/
-        
-        //DrawText(TextFormat("Current FPS: %i", currentFPS), 600, 10, 20, DARKGREEN);
-       /* DrawText(TextFormat("Lowest FPS: %i", lowestFPS), 200, 10, 20, DARKGREEN);
-        DrawText(TextFormat("Highest FPS: %i", highestFPS), 400, 10, 20, DARKGREEN);*/
         //DrawText("Congrats! You created your first window!", 190, 200, 20, LIGHTGRAY);
 
         EndDrawing();
